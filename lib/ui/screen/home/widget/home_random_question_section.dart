@@ -1,0 +1,104 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/entity/question.dart';
+import '../../../../localization/l10n.dart';
+import '../../../bloc/random_question/random_question_bloc.dart';
+import '../../../bloc/random_question/random_question_bloc_event.dart';
+import '../../../bloc/random_question/random_question_bloc_state.dart';
+import '../../../error/ui_error_converter.dart';
+import '../../../utils/dimensions.dart';
+import '../../../widget/practice_question_widget.dart';
+import '../../../widget/screen_horizontal_padding.dart';
+
+class HomeRandomQuestionSection extends StatelessWidget {
+  const HomeRandomQuestionSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: BlocBuilder<RandomQuestionBloc, RandomQuestionBlocState>(
+        builder: (context, state) => Column(
+          children: [
+            _buildHeader(context),
+            _buildBody(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return BlocBuilder<RandomQuestionBloc, RandomQuestionBlocState>(
+        builder: (context, state) {
+      return ScreenHorizontalPadding.symmetricVertical(
+        verticalPadding: Dimensions.vertSpacingSmall,
+        child: Row(
+          children: [
+            Text(
+              S.of(context).random_question_section_header,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            IconButton(
+              onPressed: () {
+                context
+                    .read<RandomQuestionBloc>()
+                    .add(const LoadRandomQuestionEvent());
+              },
+              icon: state.maybeMap(
+                loading: (_) => const CircularProgressIndicator(),
+                orElse: () => Icon(
+                  Icons.refresh,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return BlocBuilder<RandomQuestionBloc, RandomQuestionBlocState>(
+      builder: (context, state) {
+        return state.map(
+          initial: (_) => Container(),
+          loading: (loading) => _buildLoading(context, loading.question),
+          loaded: (loaded) => _buildLoaded(context, loaded.question),
+          error: (error) => _buildError(context, error.error),
+        );
+      },
+    );
+  }
+
+  Widget _buildLoading(
+    BuildContext context,
+    Question? question,
+  ) {
+    return question != null
+        ? PracticeQuestionWidget(question: question)
+        : Container();
+  }
+
+  Widget _buildLoaded(
+    BuildContext context,
+    Question question,
+  ) {
+    return PracticeQuestionWidget(question: question);
+  }
+
+  Widget _buildError(
+    BuildContext context,
+    dynamic error,
+  ) {
+    return ScreenHorizontalPadding.symmetricVertical(
+      verticalPadding: Dimensions.vertSpacingLarge,
+      child: Text(
+        UiErrorConverter.convert(context, error),
+        style: Theme.of(context).textTheme.bodyLarge,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}

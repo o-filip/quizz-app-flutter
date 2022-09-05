@@ -1,0 +1,105 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../core/di/di.dart';
+import '../../../core/enum/category.dart';
+import '../../../core/enum/difficulty.dart';
+import '../../../localization/l10n.dart';
+import '../../bloc/quiz/quiz_bloc.dart';
+import '../../bloc/quiz/quiz_bloc_event.dart';
+import '../../bloc/quiz/quiz_bloc_state.dart';
+import '../../error/ui_error_converter.dart';
+import '../../utils/dimensions.dart';
+import '../../widget/screen_horizontal_padding.dart';
+import '../../widget/vert_spacer.dart';
+import 'widget/quiz_question_content.dart';
+import 'widget/quiz_review_content.dart';
+
+class QuizScreen extends StatelessWidget {
+  const QuizScreen({
+    super.key,
+    this.difficulty,
+    required this.categories,
+    required this.numOfQuestions,
+  });
+
+  final Difficulty? difficulty;
+  final List<Category> categories;
+  final int numOfQuestions;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<QuizBloc>(
+      create: (_) => getIt<QuizBloc>()
+        ..add(
+          GenerateQuizEvent(
+            difficulty: difficulty,
+            categories: categories,
+            numOfQuestions: numOfQuestions,
+          ),
+        ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(S.of(context).quiz_app_bar_title),
+        ),
+        body: SafeArea(
+          child: _buildBody(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return BlocBuilder<QuizBloc, QuizBlocState>(
+      builder: (context, state) {
+        if (state is Initial) {
+          return Container();
+        } else if (state is LoadingQuiz) {
+          return _buildLoading(context);
+        } else if (state is DisplayingQuestion) {
+          return QuizQuestionContent(state: state);
+        } else if (state is QuizError) {
+          return _buildError(context, state);
+        } else if (state is QuizFinished) {
+          return QuizReviewContent(state: state);
+        } else {
+          throw UnimplementedError();
+        }
+      },
+    );
+  }
+
+  Widget _buildLoading(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(S.of(context).quiz_loading_message,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  )),
+          const VerticalSpacerMedium(),
+          const CircularProgressIndicator(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildError(
+    BuildContext context,
+    QuizError state,
+  ) {
+    return Center(
+      child: ScreenHorizontalPadding.symmetricVertical(
+        verticalPadding: Dimensions.vertSpacingXLarge,
+        child: Text(
+          UiErrorConverter.convert(context, state.error),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+}
