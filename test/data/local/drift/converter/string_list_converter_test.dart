@@ -32,7 +32,7 @@ void main() {
     });
 
     test('toSql should handle special characters in strings', () {
-      final input = ['Apple[0]', 'Ba"nana"', 'O\'Reilly'];
+      final input = ['Apple[0]', 'Ba"nana"', "O'Reilly"];
       final result = converter.toSql(input);
 
       expect(result, isA<String>());
@@ -44,7 +44,7 @@ void main() {
       final result = converter.fromSql(input);
 
       expect(result, isA<List<String>>());
-      expect(result, ['Apple[0]', 'Ba"nana"', 'O\'Reilly']);
+      expect(result, ['Apple[0]', 'Ba"nana"', "O'Reilly"]);
     });
   });
 }

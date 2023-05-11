@@ -1,5 +1,5 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:quiz_app/core/util/answers_permutation_utils.dart';
-import 'package:test/test.dart';
 
 import '../../fixtures/fixtures.dart';
 

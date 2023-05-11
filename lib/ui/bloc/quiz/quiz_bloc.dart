@@ -44,7 +44,10 @@ class QuizBloc extends Bloc<QuizBlocEvent, QuizBlocState> {
 
     await emit.onEach(stream, onData: (quiz) {
       if (quiz.isValue) {
-        _updateQuizQuestions(quiz.asValue!.value);
+        _updateQuizQuestions(
+          quiz.asValue!.value,
+          emit,
+        );
       } else {
         emit(QuizError(quiz.asError!.error));
       }
@@ -53,6 +56,7 @@ class QuizBloc extends Bloc<QuizBlocEvent, QuizBlocState> {
 
   void _updateQuizQuestions(
     List<Question> questions,
+    Emitter<QuizBlocState> emit,
   ) {
     final state = this.state;
 

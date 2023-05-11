@@ -8,7 +8,7 @@ mixin BaseRetrofitDataStore {
 
   DataException _transformError(dynamic error) {
     Logger(logTag).severe('Handling error: $error');
-    if (error is DioError) {
+    if (error is DioException) {
       return _transformDioError(error);
     } else if (error is TypeError) {
       return DataException.invalidOutputFormat(cause: error);
@@ -17,25 +17,25 @@ mixin BaseRetrofitDataStore {
     }
   }
 
-  DataException _transformDioError(DioError error) {
+  DataException _transformDioError(DioException error) {
     switch (error.type) {
-      case DioErrorType.connectionTimeout:
-      case DioErrorType.sendTimeout:
-      case DioErrorType.receiveTimeout:
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
         return DataException.timeout(cause: error);
-      case DioErrorType.cancel:
+      case DioExceptionType.cancel:
         return DataException.canceled(cause: error);
-      case DioErrorType.badResponse:
+      case DioExceptionType.badResponse:
         return _transformDioResponseError(error);
-      case DioErrorType.connectionError:
+      case DioExceptionType.connectionError:
         return DataException.connectionError(cause: error);
-      case DioErrorType.badCertificate:
-      case DioErrorType.unknown:
+      case DioExceptionType.badCertificate:
+      case DioExceptionType.unknown:
         return DataException.unknown(cause: error);
     }
   }
 
-  DataException _transformDioResponseError(DioError error) {
+  DataException _transformDioResponseError(DioException error) {
     switch (error.response?.statusCode) {
       case 401:
         return DataException.unauthorized(cause: error);
