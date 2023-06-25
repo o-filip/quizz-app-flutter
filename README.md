@@ -75,7 +75,7 @@ Communication between the layers is structured in a one-way manner, following a 
 
 - [RxDart](https://pub.dev/packages/rxdart): Used for streams manipulation.
 
-- [GoRouter](https://pub.dev/packages/go_router): Used for navigation between screens.
+- [AutoRoute](https://pub.dev/packages/auto_route): Used for navigation between screens.
 
 - [Bloc](https://pub.dev/packages/bloc): Used for UI logic.
 
