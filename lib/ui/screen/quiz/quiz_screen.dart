@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,6 +16,7 @@ import '../../widget/vert_spacer.dart';
 import 'widget/quiz_question_content.dart';
 import 'widget/quiz_review_content.dart';
 
+@RoutePage()
 class QuizScreen extends StatelessWidget {
   const QuizScreen({
     super.key,

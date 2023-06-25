@@ -1,16 +1,33 @@
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 
-import 'route/categories_selection_route.dart';
-import 'route/home_route.dart';
-import 'route/quiz_route.dart';
-import 'route/stored_questions_list_route.dart';
+import '../../core/enum/category.dart';
+import '../../core/enum/difficulty.dart';
+import '../screen/categories_selection_screen.dart';
+import '../screen/home/home_screen.dart';
+import '../screen/quiz/quiz_screen.dart';
+import '../screen/stored_questions/stored_questions_list_screen.dart';
 
-final router = GoRouter(
-  routes: [
-    HomeGoRoute.generate([
-      QuizGoRoute.generate(),
-      StoredQuestionsListGoRoute.generate(),
-    ]),
-    CategoriesSelectionGoRoute.generate(),
-  ],
-);
+part 'app_router.gr.dart';
+
+@AutoRouterConfig(
+  replaceInRouteName: 'Screen,Route',
+)
+class AppRouter extends _$AppRouter {
+  @override
+  List<AutoRoute> get routes => [
+        AutoRoute(
+          page: HomeRoute.page,
+          initial: true,
+        ),
+        AutoRoute(
+          page: CategoriesSelectionRoute.page,
+        ),
+        AutoRoute(
+          page: QuizRoute.page,
+        ),
+        AutoRoute(
+          page: StoredQuestionsListRoute.page,
+        ),
+      ];
+}

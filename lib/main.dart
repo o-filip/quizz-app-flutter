@@ -11,7 +11,6 @@ import 'ui/bloc/stored_questions/filter/stored_questions_filter_cubit.dart';
 import 'ui/bloc/stored_questions/filter/stored_questions_filter_cubit_state.dart';
 import 'ui/bloc/stored_questions/list/stored_questions_list_bloc.dart';
 import 'ui/bloc/stored_questions/list/stored_questions_list_bloc_event.dart';
-import 'ui/navigation/app_router.dart';
 import 'ui/theme/quiz_app_theme.dart';
 
 void main() async {
@@ -23,7 +22,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp.router(
           title: 'Flutter Demo',
           theme: QuizAppTheme.createTheme(),
-          routerConfig: router,
+          routerConfig: getIt(),
           localizationsDelegates: const [
             S.delegate,
             GlobalMaterialLocalizations.delegate,

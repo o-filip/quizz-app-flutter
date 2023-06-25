@@ -1,10 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/enum/category.dart';
 import '../../../../core/enum/difficulty.dart';
 import '../../../../localization/l10n.dart';
-import '../../../navigation/route/quiz_route.dart';
+import '../../../navigation/app_router.dart';
 import '../../../utils/dimensions.dart';
 import '../../../widget/categories_selection_input.dart';
 import '../../../widget/difficulty_dropdown_button.dart';
@@ -107,12 +107,10 @@ class HomeNewQuizSectionState extends State<HomeNewQuizSection> {
   }
 
   void _onGenerateTap() {
-    context.go(
-      QuizGoRoute.route(
-        categories: categories ?? [],
-        numOfQuestions: _numOfQuestions,
-        difficulty: _difficulty,
-      ),
-    );
+    context.pushRoute(QuizRoute(
+      categories: categories ?? [],
+      numOfQuestions: _numOfQuestions,
+      difficulty: _difficulty,
+    ));
   }
 }

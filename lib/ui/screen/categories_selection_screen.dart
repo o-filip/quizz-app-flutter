@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -6,6 +7,7 @@ import '../../localization/l10n.dart';
 import '../utils/dimensions.dart';
 import '../widget/screen_horizontal_padding.dart';
 
+@RoutePage<List<Category>?>()
 class CategoriesSelectionScreen extends StatefulWidget {
   const CategoriesSelectionScreen({
     super.key,
