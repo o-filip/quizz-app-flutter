@@ -1,9 +1,9 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/enum/category.dart';
-import '../navigation/app_router.dart';
+import '../screen/categories_selection_screen.dart';
 
 class CategoriesSelectionInput extends StatelessWidget {
   const CategoriesSelectionInput({
@@ -36,10 +36,10 @@ class CategoriesSelectionInput extends StatelessWidget {
   }
 
   Future<void> _onTap(BuildContext context) async {
-    final result = await context.pushRoute<List<Category>?>(
-      CategoriesSelectionRoute(
-        preselectedCategories: value ?? [],
-      ),
+    final result = await context.push<List<Category>>(
+      CategoriesSelectionRoute.uri(
+        preselectedCategories: value,
+      ).toString(),
     );
 
     if (result != null) {

@@ -23,7 +23,7 @@ class PracticeQuestionWidgetState extends State<PracticeQuestionWidget> {
 
   @override
   void didUpdateWidget(covariant PracticeQuestionWidget oldWidget) {
-    if (oldWidget.question != widget.question) {
+    if (oldWidget.question.id != widget.question.id) {
       setState(() {
         _isCorrectAnswerVisible = false;
       });

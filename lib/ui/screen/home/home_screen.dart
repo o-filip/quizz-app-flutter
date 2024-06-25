@@ -1,13 +1,16 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../navigation/app_router.dart';
 import '../../widget/screen_horizontal_padding.dart';
+import '../stored_questions/stored_questions_list_screen.dart';
 import 'widget/home_new_quiz_section.dart';
 import 'widget/home_random_question_section.dart';
 
-@RoutePage()
+class HomeRoute {
+  static const path = '/';
+}
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -30,7 +33,7 @@ class HomeScreen extends StatelessWidget {
           verticalPadding: 16,
           child: ElevatedButton(
             onPressed: () {
-              context.pushRoute(const StoredQuestionsListRoute());
+              context.push(StoredQuestionsListRoute.path);
             },
             child: Text(S.of(context).home_all_stored_questions_button),
           ),

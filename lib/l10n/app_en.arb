@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "new_quiz_section_header": "New Quiz",
+    "new_quiz_section_header": "Start New Quiz",
     "new_quiz_section_confirm_button": "Generate",
     "new_quiz_section_difficulty_label": "Difficulty",
     "categories_selection_input_label": "Categories",

@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,13 +9,46 @@ import '../../bloc/quiz/quiz_bloc.dart';
 import '../../bloc/quiz/quiz_bloc_event.dart';
 import '../../bloc/quiz/quiz_bloc_state.dart';
 import '../../error/ui_error_converter.dart';
+import '../../navigation/query_params_ext.dart';
 import '../../utils/dimensions.dart';
 import '../../widget/screen_horizontal_padding.dart';
 import '../../widget/vert_spacer.dart';
 import 'widget/quiz_question_content.dart';
 import 'widget/quiz_review_content.dart';
 
-@RoutePage()
+class QuizRoute {
+  static const path = '/quiz';
+
+  static Uri uri({
+    Difficulty? difficulty,
+    List<Category>? categories,
+    required int numOfQuestions,
+  }) =>
+      Uri(
+        path: path,
+        queryParameters: {
+          if (difficulty != null) 'difficulty': difficulty.index.toString(),
+          if (categories?.isNotEmpty ?? false)
+            'categories': categories!.encodeEnumListToUriQuery(),
+          'numOfQuestions': numOfQuestions.toString(),
+        },
+      );
+
+  static QuizScreen fromUri(Uri uri) {
+    final difficulty = uri.queryParameters['difficulty'] != null
+        ? Difficulty.values[int.parse(uri.queryParameters['difficulty']!)]
+        : null;
+    final categories = uri.decodeEnumList('categories', Category.values) ?? [];
+    final numOfQuestions = int.parse(uri.queryParameters['numOfQuestions']!);
+
+    return QuizScreen(
+      difficulty: difficulty,
+      categories: categories,
+      numOfQuestions: numOfQuestions,
+    );
+  }
+}
+
 class QuizScreen extends StatelessWidget {
   const QuizScreen({
     super.key,

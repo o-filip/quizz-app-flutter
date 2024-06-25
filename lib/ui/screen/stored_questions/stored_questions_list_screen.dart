@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,7 +12,10 @@ import '../../utils/dimensions.dart';
 import '../../widget/screen_horizontal_padding.dart';
 import 'widget/stored_question_list_item.dart';
 
-@RoutePage()
+class StoredQuestionsListRoute {
+  static const path = '/stored-questions';
+}
+
 class StoredQuestionsListScreen extends StatelessWidget {
   const StoredQuestionsListScreen({super.key});
 

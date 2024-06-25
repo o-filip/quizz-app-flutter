@@ -1,13 +1,36 @@
-import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../core/enum/category.dart';
+import '../navigation/query_params_ext.dart';
 import '../utils/dimensions.dart';
 import '../widget/screen_horizontal_padding.dart';
 
-@RoutePage<List<Category>?>()
+class CategoriesSelectionRoute {
+  static const path = '/categories-selection';
+
+  static Uri uri({
+    List<Category>? preselectedCategories,
+  }) =>
+      Uri(
+        path: path,
+        queryParameters: {
+          'preselectedCategories':
+              preselectedCategories?.encodeEnumListToUriQuery() ?? [],
+        },
+      );
+
+  static CategoriesSelectionScreen fromUri(Uri uri) {
+    final preselectedCategories =
+        uri.decodeEnumList('preselectedCategories', Category.values);
+
+    return CategoriesSelectionScreen(
+      preselectedCategories: preselectedCategories ?? [],
+    );
+  }
+}
+
 class CategoriesSelectionScreen extends StatefulWidget {
   const CategoriesSelectionScreen({
     super.key,
@@ -25,8 +48,8 @@ class CategoriesSelectionScreenState extends State<CategoriesSelectionScreen> {
 
   @override
   void initState() {
-    _selectedCategories = widget.preselectedCategories;
     super.initState();
+    _selectedCategories = widget.preselectedCategories;
   }
 
   @override
