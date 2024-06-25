@@ -15,8 +15,6 @@ class QuizAppTheme {
           secondaryContainer: AppColors.purpleLight,
           error: AppColors.red,
           onError: AppColors.white,
-          background: AppColors.white,
-          onBackground: AppColors.black,
           surface: AppColors.white,
           onSurface: AppColors.black,
         ),
@@ -64,8 +62,8 @@ class QuizAppTheme {
       );
 
   static CheckboxThemeData _createCheckboxTheme() => CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(AppColors.purpleLight),
-        checkColor: MaterialStateProperty.all(AppColors.purple),
+        fillColor: WidgetStateProperty.all(AppColors.purpleLight),
+        checkColor: WidgetStateProperty.all(AppColors.purple),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(4),
