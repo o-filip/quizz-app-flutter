@@ -6,14 +6,9 @@ enum Difficulty {
   medium,
   hard;
 
-  String toUserString(BuildContext context) {
-    switch (this) {
-      case Difficulty.easy:
-        return S.of(context).difficult_easy;
-      case Difficulty.medium:
-        return S.of(context).difficult_medium;
-      case Difficulty.hard:
-        return S.of(context).difficult_hard;
-    }
-  }
+  String toUserString(BuildContext context) => switch (this) {
+        Difficulty.easy => S.of(context).difficult_easy,
+        Difficulty.medium => S.of(context).difficult_medium,
+        Difficulty.hard => S.of(context).difficult_hard,
+      };
 }

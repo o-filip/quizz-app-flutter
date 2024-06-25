@@ -17,34 +17,26 @@ mixin BaseRetrofitDataStore {
     }
   }
 
-  DataException _transformDioError(DioException error) {
-    switch (error.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return TimeoutDataException(cause: error);
-      case DioExceptionType.cancel:
-        return CanceledDataException(cause: error);
-      case DioExceptionType.badResponse:
-        return _transformDioResponseError(error);
-      case DioExceptionType.connectionError:
-        return ConnectionErrorDataException(cause: error);
-      case DioExceptionType.badCertificate:
-      case DioExceptionType.unknown:
-        return UnknownDataException(cause: error);
-    }
-  }
+  DataException _transformDioError(DioException error) => switch (error.type) {
+        DioExceptionType.connectionTimeout ||
+        DioExceptionType.sendTimeout ||
+        DioExceptionType.receiveTimeout =>
+          TimeoutDataException(cause: error),
+        DioExceptionType.cancel => CanceledDataException(cause: error),
+        DioExceptionType.badResponse => _transformDioResponseError(error),
+        DioExceptionType.connectionError =>
+          ConnectionErrorDataException(cause: error),
+        DioExceptionType.badCertificate ||
+        DioExceptionType.unknown =>
+          UnknownDataException(cause: error),
+      };
 
-  DataException _transformDioResponseError(DioException error) {
-    switch (error.response?.statusCode) {
-      case 401:
-        return UnauthorizedDataException(cause: error);
-      case 404:
-        return NotFoundDataException(cause: error);
-      default:
-        return UnknownDataException(cause: error);
-    }
-  }
+  DataException _transformDioResponseError(DioException error) =>
+      switch (error.response?.statusCode) {
+        401 => UnauthorizedDataException(cause: error),
+        404 => NotFoundDataException(cause: error),
+        _ => UnknownDataException(cause: error),
+      };
 
   Future<T> fetch<T>(
     Future<T> Function() call,
