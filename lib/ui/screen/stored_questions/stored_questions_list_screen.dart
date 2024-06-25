@@ -1,9 +1,9 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/entity/question.dart';
-import '../../../localization/l10n.dart';
 import '../../bloc/stored_questions/filter/stored_questions_filter_cubit.dart';
 import '../../bloc/stored_questions/filter/stored_questions_filter_cubit_state.dart';
 import '../../bloc/stored_questions/list/stored_questions_list_bloc.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../core/entity/question.dart';
-import '../../../../localization/l10n.dart';
 import '../../../widget/category_and_difficulty_labels.dart';
 import '../../../widget/question_like_button.dart';
 

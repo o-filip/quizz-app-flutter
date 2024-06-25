@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/di/di.dart';
 import 'core/logging/logging.dart';
-import 'localization/l10n.dart';
 import 'ui/bloc/random_question/random_question_bloc.dart';
 import 'ui/bloc/random_question/random_question_bloc_event.dart';
 import 'ui/bloc/stored_questions/filter/stored_questions_filter_cubit.dart';

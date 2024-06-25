@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../localization/l10n.dart';
 import '../../../bloc/quiz/quiz_bloc_state.dart';
 import '../../../utils/dimensions.dart';
 import '../../../widget/screen_horizontal_padding.dart';

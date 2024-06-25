@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../core/entity/question.dart';
-import '../../../../localization/l10n.dart';
 import '../../../bloc/quiz/quiz_bloc_state.dart';
 import '../../../theme/extensions/colors_extension_theme_data.dart';
 import '../../../utils/dimensions.dart';

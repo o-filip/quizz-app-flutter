@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../localization/l10n.dart';
 import '../../navigation/app_router.dart';
 import '../../widget/screen_horizontal_padding.dart';
 import 'widget/home_new_quiz_section.dart';

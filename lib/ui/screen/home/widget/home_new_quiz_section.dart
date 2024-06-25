@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../core/enum/category.dart';
 import '../../../../core/enum/difficulty.dart';
-import '../../../../localization/l10n.dart';
 import '../../../navigation/app_router.dart';
 import '../../../utils/dimensions.dart';
 import '../../../widget/categories_selection_input.dart';

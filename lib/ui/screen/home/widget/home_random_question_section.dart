@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../core/entity/question.dart';
-import '../../../../localization/l10n.dart';
 import '../../../bloc/random_question/random_question_bloc.dart';
 import '../../../bloc/random_question/random_question_bloc_event.dart';
 import '../../../bloc/random_question/random_question_bloc_state.dart';

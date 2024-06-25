@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 
 import '../../core/error/data_exception.dart';
 import '../../core/error/domain_exception.dart';
-import '../../localization/l10n.dart';
 
 class UiErrorConverter {
   static const logTag = 'UiErrorConverter';
