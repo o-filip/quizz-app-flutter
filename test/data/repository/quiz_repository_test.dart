@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:quiz_app/core/entity/question.dart';
 import 'package:quiz_app/core/enum/category.dart';
 import 'package:quiz_app/core/enum/difficulty.dart';
-import 'package:quiz_app/core/error/data_exception.dart';
+import 'package:quiz_app/core/error/exception.dart';
 import 'package:quiz_app/core/network/connectivity_info.dart';
 import 'package:quiz_app/data/remote/data_store/quiz_remote_data_store.dart';
 import 'package:quiz_app/data/repository/quiz_repository_impl.dart';

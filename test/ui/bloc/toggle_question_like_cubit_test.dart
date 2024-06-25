@@ -5,7 +5,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:quiz_app/domain/use_case/toggle_question_like_use_case.dart';
 import 'package:quiz_app/ui/bloc/toggle_question_like/toggle_question_like_cubit.dart';
-import 'package:quiz_app/ui/bloc/toggle_question_like/toggle_question_like_cubit_state.dart';
+import 'package:quiz_app/ui/bloc/toggle_question_like/toggle_question_like_state.dart';
 
 import '../../fixtures/fixtures.dart';
 import 'toggle_question_like_cubit_test.mocks.dart';
@@ -36,8 +36,8 @@ void main() {
       );
 
       final expectedStates = [
-        const ToggleQuestionLikeCubitState.toggleInProgress(),
-        const ToggleQuestionLikeCubitState.done()
+        const ToggleQuestionLikeStateToggleInProgress(),
+        const ToggleQuestionLikeStateDone()
       ];
 
       await testBloc(
@@ -60,8 +60,8 @@ void main() {
       );
 
       final expectedStates = [
-        const ToggleQuestionLikeCubitState.toggleInProgress(),
-        ToggleQuestionLikeCubitState.error(error)
+        const ToggleQuestionLikeStateToggleInProgress(),
+        ToggleQuestionLikeStateError(error: error)
       ];
 
       await testBloc(

@@ -7,7 +7,7 @@ import '../../../core/enum/category.dart';
 import '../../../core/enum/difficulty.dart';
 import '../../bloc/quiz/quiz_bloc.dart';
 import '../../bloc/quiz/quiz_bloc_event.dart';
-import '../../bloc/quiz/quiz_bloc_state.dart';
+import '../../bloc/quiz/quiz_state.dart';
 import '../../error/ui_error_converter.dart';
 import '../../navigation/query_params_ext.dart';
 import '../../utils/dimensions.dart';
@@ -84,17 +84,17 @@ class QuizScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    return BlocBuilder<QuizBloc, QuizBlocState>(
+    return BlocBuilder<QuizBloc, QuizState>(
       builder: (context, state) {
-        if (state is Initial) {
+        if (state is QuizStateInitial) {
           return Container();
-        } else if (state is LoadingQuiz) {
+        } else if (state is QuizStateLoading) {
           return _buildLoading(context);
-        } else if (state is DisplayingQuestion) {
+        } else if (state is QuizStateDisplayingQuestion) {
           return QuizQuestionContent(state: state);
-        } else if (state is QuizError) {
+        } else if (state is QuizStateError) {
           return _buildError(context, state);
-        } else if (state is QuizFinished) {
+        } else if (state is QuizStateFinished) {
           return QuizReviewContent(state: state);
         } else {
           throw UnimplementedError();
@@ -121,7 +121,7 @@ class QuizScreen extends StatelessWidget {
 
   Widget _buildError(
     BuildContext context,
-    QuizError state,
+    QuizStateError state,
   ) {
     return Center(
       child: ScreenHorizontalPadding.symmetricVertical(

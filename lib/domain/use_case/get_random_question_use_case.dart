@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:async/async.dart';
 
 import '../../core/entity/question.dart';
-import '../../core/error/domain_exception.dart';
+import '../../core/error/exception.dart';
 import '../../core/extension/result_ext.dart';
 import '../../core/util/answers_permutation_utils.dart';
 import '../../data/repository/quiz_repository.dart';
@@ -36,7 +36,7 @@ class GetRandomQuestionUseCaseImpl implements GetRandomQuestionUseCase {
 
           if (questions.isEmpty) {
             // No stored questions
-            throw const DomainException.noStoredQuestion();
+            throw const NoStoredQuestionDomainException();
           } else if (questionId != null) {
             // Stream emitted new values
             result =

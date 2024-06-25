@@ -1,7 +1,7 @@
 import 'package:async/async.dart';
 import 'package:logging/logging.dart';
 
-import '../../core/error/data_exception.dart';
+import '../../core/error/exception.dart';
 
 mixin BaseRepository {
   static const logTag = 'BaseRepository';
@@ -10,7 +10,7 @@ mixin BaseRepository {
     if (error is DataException) {
       return error;
     } else {
-      return DataException.unknown(cause: error);
+      return UnknownDataException(cause: error);
     }
   }
 

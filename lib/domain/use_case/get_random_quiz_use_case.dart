@@ -3,8 +3,7 @@ import 'package:async/async.dart';
 import '../../core/entity/question.dart';
 import '../../core/enum/category.dart';
 import '../../core/enum/difficulty.dart';
-import '../../core/error/data_exception.dart';
-import '../../core/error/domain_exception.dart';
+import '../../core/error/exception.dart';
 import '../../core/extension/result_ext.dart';
 import '../../core/util/answers_permutation_utils.dart';
 import '../../data/repository/quiz_repository.dart';
@@ -61,12 +60,8 @@ class GetRandomQuizUseCaseImpl extends GetRandomQuizUseCase {
                 );
               },
               error: (error) {
-                if (error is DataException) {
-                  return error.maybeMap(
-                    notEnoughEntries: (_) =>
-                        const DomainException.notEnoughStoredQuestions(),
-                    orElse: () => error,
-                  );
+                if (error is NotEnoughEntriesDataException) {
+                  return const NotEnoughStoredQuestionsDomainException();
                 } else {
                   return error;
                 }

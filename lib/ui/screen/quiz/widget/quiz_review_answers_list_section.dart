@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../core/entity/question.dart';
-import '../../../bloc/quiz/quiz_bloc_state.dart';
+import '../../../bloc/quiz/quiz_state.dart';
 import '../../../theme/extensions/colors_extension_theme_data.dart';
 import '../../../utils/dimensions.dart';
 import '../../../widget/question_like_button.dart';
@@ -13,7 +13,7 @@ class QuizReviewAnswersListSection extends StatelessWidget {
     required this.state,
   });
 
-  final QuizFinished state;
+  final QuizStateFinished state;
 
   @override
   Widget build(BuildContext context) {

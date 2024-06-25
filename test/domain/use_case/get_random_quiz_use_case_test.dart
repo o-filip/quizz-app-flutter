@@ -8,7 +8,7 @@ import 'package:mockito/mockito.dart';
 import 'package:quiz_app/core/entity/question.dart';
 import 'package:quiz_app/core/enum/category.dart';
 import 'package:quiz_app/core/enum/difficulty.dart';
-import 'package:quiz_app/core/error/data_exception.dart';
+import 'package:quiz_app/core/error/exception.dart';
 import 'package:quiz_app/core/util/answers_permutation_utils.dart';
 import 'package:quiz_app/data/repository/quiz_repository.dart';
 import 'package:quiz_app/domain/use_case/get_random_quiz_use_case.dart';
@@ -113,7 +113,7 @@ void main() {
         categories: anyNamed('categories'),
         difficulty: anyNamed('difficulty'),
         minimalNumOfQuestions: numOfQuestions,
-      )).thenThrow(const DataException.unknown());
+      )).thenThrow(const UnknownDataException());
 
       // act
       final stream = useCase(

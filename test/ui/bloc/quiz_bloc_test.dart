@@ -12,7 +12,7 @@ import 'package:quiz_app/core/enum/difficulty.dart';
 import 'package:quiz_app/domain/use_case/get_random_quiz_use_case.dart';
 import 'package:quiz_app/ui/bloc/quiz/quiz_bloc.dart';
 import 'package:quiz_app/ui/bloc/quiz/quiz_bloc_event.dart';
-import 'package:quiz_app/ui/bloc/quiz/quiz_bloc_state.dart';
+import 'package:quiz_app/ui/bloc/quiz/quiz_state.dart';
 
 import '../../fixtures/fixtures.dart';
 import 'quiz_bloc_test.mocks.dart';
@@ -58,8 +58,8 @@ void main() {
       );
 
       final expectedStates = [
-        LoadingQuiz(),
-        DisplayingQuestion(
+        const QuizStateLoading(),
+        QuizStateDisplayingQuestion(
           questions: questions,
           currentQuestionIndex: 0,
           selectedAnswers: {},
@@ -104,13 +104,13 @@ void main() {
       );
 
       final expectedStates = [
-        LoadingQuiz(),
-        DisplayingQuestion(
+        const QuizStateLoading(),
+        QuizStateDisplayingQuestion(
           questions: questions,
           currentQuestionIndex: 0,
           selectedAnswers: {},
         ),
-        DisplayingQuestion(
+        QuizStateDisplayingQuestion(
           questions: updatedQuestions,
           currentQuestionIndex: 0,
           selectedAnswers: {},
@@ -135,12 +135,12 @@ void main() {
     test(
         'emits QuizFinished state when AnswerQuestionEvent is triggered for the last question',
         () async {
-      final currentState = DisplayingQuestion(
+      final currentState = QuizStateDisplayingQuestion(
         questions: questions,
         currentQuestionIndex: questions.length - 1,
         selectedAnswers: {},
       );
-      final expectedState = QuizFinished(
+      final expectedState = QuizStateFinished(
         questions: questions,
         selectedAnswers: {
           questions.last.id: answer,
@@ -153,7 +153,7 @@ void main() {
         answer: answer,
       );
 
-      await testBloc<QuizBloc, QuizBlocState>(
+      await testBloc<QuizBloc, QuizState>(
         build: () => quizBloc,
         seed: () => currentState,
         act: (bloc) => bloc.add(event),
@@ -164,7 +164,7 @@ void main() {
     test(
         'does not emit QuizFinished state when AnswerQuestionEvent is triggered for a non-last question',
         () async {
-      final currentState = DisplayingQuestion(
+      final currentState = QuizStateDisplayingQuestion(
         questions: questions,
         currentQuestionIndex: 0,
         selectedAnswers: {},
@@ -180,7 +180,7 @@ void main() {
         answer: answer,
       );
 
-      await testBloc<QuizBloc, QuizBlocState>(
+      await testBloc<QuizBloc, QuizState>(
         build: () => quizBloc,
         seed: () => currentState,
         act: (bloc) => bloc.add(event),
@@ -207,8 +207,8 @@ void main() {
       );
 
       final expectedStates = [
-        LoadingQuiz(),
-        QuizError(error),
+        const QuizStateLoading(),
+        QuizStateError(error: error),
       ];
 
       await testBloc(

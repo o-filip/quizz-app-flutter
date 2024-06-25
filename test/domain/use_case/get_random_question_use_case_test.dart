@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:quiz_app/core/entity/question.dart';
-import 'package:quiz_app/core/error/domain_exception.dart';
+import 'package:quiz_app/core/error/exception.dart';
 import 'package:quiz_app/core/util/answers_permutation_utils.dart';
 import 'package:quiz_app/data/repository/quiz_repository.dart';
 import 'package:quiz_app/domain/use_case/get_random_question_use_case.dart';

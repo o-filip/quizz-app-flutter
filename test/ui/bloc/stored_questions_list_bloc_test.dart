@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:quiz_app/domain/use_case/get_stored_questions_use_case.dart';
 import 'package:quiz_app/ui/bloc/stored_questions/list/stored_questions_list_bloc.dart';
 import 'package:quiz_app/ui/bloc/stored_questions/list/stored_questions_list_bloc_event.dart';
-import 'package:quiz_app/ui/bloc/stored_questions/list/stored_questions_list_bloc_state.dart';
+import 'package:quiz_app/ui/bloc/stored_questions/list/stored_questions_list_state.dart';
 
 import '../../fixtures/fixtures.dart';
 import 'stored_questions_list_bloc_test.mocks.dart';
@@ -39,8 +39,8 @@ void main() {
       const event = LoadStoredQuestionsListEvent();
 
       final expectedStates = [
-        StoredQuestionsListBlocState.loading(),
-        StoredQuestionsListBlocState.loaded(questions: questions)
+        StoredQuestionsListStateLoading(),
+        StoredQuestionsListStateData(questions: questions)
       ];
 
       await testBloc(
@@ -64,8 +64,8 @@ void main() {
       const event = LoadStoredQuestionsListEvent();
 
       final expectedStates = [
-        StoredQuestionsListBlocState.loading(),
-        StoredQuestionsListBlocState.error(error: error)
+        StoredQuestionsListStateLoading(),
+        StoredQuestionsListStateError(error: error)
       ];
 
       await testBloc(

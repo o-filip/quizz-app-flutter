@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/di/di.dart';
 import '../../core/entity/question.dart';
 import '../bloc/toggle_question_like/toggle_question_like_cubit.dart';
-import '../bloc/toggle_question_like/toggle_question_like_cubit_state.dart';
+import '../bloc/toggle_question_like/toggle_question_like_state.dart';
 import '../theme/extensions/colors_extension_theme_data.dart';
 
 class QuestionLikeButton extends StatelessWidget {
@@ -19,7 +19,7 @@ class QuestionLikeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ToggleQuestionLikeCubit>(
       create: (_) => getIt<ToggleQuestionLikeCubit>(),
-      child: BlocBuilder<ToggleQuestionLikeCubit, ToggleQuestionLikeCubitState>(
+      child: BlocBuilder<ToggleQuestionLikeCubit, ToggleQuestionLikeState>(
         builder: (context, state) {
           return IconButton(
             onPressed: () => _onPressed(context),

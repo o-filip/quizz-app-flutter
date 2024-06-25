@@ -1,6 +1,6 @@
 import 'package:async/async.dart';
 
-import '../../core/error/domain_exception.dart';
+import '../../core/error/exception.dart';
 import '../../core/extension/result_ext.dart';
 import '../../data/repository/quiz_repository.dart';
 
@@ -26,7 +26,7 @@ class ToggleQuestionLikeUseCaseImpl implements ToggleQuestionLikeUseCase {
             question.copyWith(isLiked: !question.isLiked),
           );
         } else {
-          throw const DomainException.questionNotFound();
+          throw const QuestionNotFoundDomainException();
         }
       },
     );

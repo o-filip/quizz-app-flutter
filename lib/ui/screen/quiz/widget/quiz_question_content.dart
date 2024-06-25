@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../core/entity/answer.dart';
 import '../../../bloc/quiz/quiz_bloc.dart';
 import '../../../bloc/quiz/quiz_bloc_event.dart';
-import '../../../bloc/quiz/quiz_bloc_state.dart';
+import '../../../bloc/quiz/quiz_state.dart';
 import '../../../utils/dimensions.dart';
 import '../../../widget/category_and_difficulty_labels.dart';
 import '../../../widget/screen_horizontal_padding.dart';
@@ -17,7 +17,7 @@ class QuizQuestionContent extends StatefulWidget {
     required this.state,
   });
 
-  final DisplayingQuestion state;
+  final QuizStateDisplayingQuestion state;
 
   @override
   State<StatefulWidget> createState() => QuizQuestionContentState();

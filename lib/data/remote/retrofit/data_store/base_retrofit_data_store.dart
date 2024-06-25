@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:logging/logging.dart';
 
-import '../../../../core/error/data_exception.dart';
+import '../../../../core/error/exception.dart';
 
 mixin BaseRetrofitDataStore {
   static const logTag = 'BaseRetrofitDataStore';
@@ -11,9 +11,9 @@ mixin BaseRetrofitDataStore {
     if (error is DioException) {
       return _transformDioError(error);
     } else if (error is TypeError) {
-      return DataException.invalidOutputFormat(cause: error);
+      return InvalidOutputFormatDataException(cause: error);
     } else {
-      return DataException.unknown(cause: error);
+      return UnknownDataException(cause: error);
     }
   }
 
@@ -22,27 +22,27 @@ mixin BaseRetrofitDataStore {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return DataException.timeout(cause: error);
+        return TimeoutDataException(cause: error);
       case DioExceptionType.cancel:
-        return DataException.canceled(cause: error);
+        return CanceledDataException(cause: error);
       case DioExceptionType.badResponse:
         return _transformDioResponseError(error);
       case DioExceptionType.connectionError:
-        return DataException.connectionError(cause: error);
+        return ConnectionErrorDataException(cause: error);
       case DioExceptionType.badCertificate:
       case DioExceptionType.unknown:
-        return DataException.unknown(cause: error);
+        return UnknownDataException(cause: error);
     }
   }
 
   DataException _transformDioResponseError(DioException error) {
     switch (error.response?.statusCode) {
       case 401:
-        return DataException.unauthorized(cause: error);
+        return UnauthorizedDataException(cause: error);
       case 404:
-        return DataException.notFound(cause: error);
+        return NotFoundDataException(cause: error);
       default:
-        return DataException.unknown(cause: error);
+        return UnknownDataException(cause: error);
     }
   }
 
