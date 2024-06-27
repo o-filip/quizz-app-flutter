@@ -1,15 +1,15 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/enum/category.dart';
 import '../../../../core/enum/difficulty.dart';
-import '../../../../localization/l10n.dart';
-import '../../../navigation/app_router.dart';
 import '../../../utils/dimensions.dart';
 import '../../../widget/categories_selection_input.dart';
 import '../../../widget/difficulty_dropdown_button.dart';
 import '../../../widget/screen_horizontal_padding.dart';
 import '../../../widget/vert_spacer.dart';
+import '../../quiz/quiz_screen.dart';
 
 class HomeNewQuizSection extends StatefulWidget {
   const HomeNewQuizSection({super.key});
@@ -28,7 +28,7 @@ class HomeNewQuizSectionState extends State<HomeNewQuizSection> {
     return Card(
       margin: const EdgeInsets.all(8),
       child: ScreenHorizontalPadding.symmetricVertical(
-        verticalPadding: Dimensions.vertSpacingSmall,
+        verticalPadding: Dimensions.vertSpacingLarge,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -46,7 +46,8 @@ class HomeNewQuizSectionState extends State<HomeNewQuizSection> {
             const VerticalSpacerLarge(),
             FilledButton(
               onPressed: _onGenerateTap,
-              child: Text(S.of(context).new_quiz_section_confirm_button),
+              child: Text(
+                  S.of(context).new_quiz_section_confirm_button.toUpperCase()),
             ),
           ],
         ),
@@ -107,10 +108,10 @@ class HomeNewQuizSectionState extends State<HomeNewQuizSection> {
   }
 
   void _onGenerateTap() {
-    context.pushRoute(QuizRoute(
-      categories: categories ?? [],
+    context.push(QuizRoute.uri(
+      categories: categories,
       numOfQuestions: _numOfQuestions,
       difficulty: _difficulty,
-    ));
+    ).toString());
   }
 }

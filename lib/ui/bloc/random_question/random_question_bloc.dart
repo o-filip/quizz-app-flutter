@@ -1,16 +1,17 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/extension/as_ext.dart';
 import '../../../core/extension/result_ext.dart';
 import '../../../domain/use_case/get_random_question_use_case.dart';
 import 'random_question_bloc_event.dart';
-import 'random_question_bloc_state.dart';
+import 'random_question_state.dart';
 
 class RandomQuestionBloc
-    extends Bloc<RandomQuestionBlocEvent, RandomQuestionBlocState> {
+    extends Bloc<RandomQuestionBlocEvent, RandomQuestionState> {
   RandomQuestionBloc({
     required this.getRandomQuestionUseCase,
-  }) : super(const RandomQuestionBlocState.initial()) {
+  }) : super(const RandomQuestionStateInitial()) {
     on<LoadRandomQuestionEvent>(
       _loadRandomQuestion,
       transformer: restartable(),
@@ -21,23 +22,21 @@ class RandomQuestionBloc
 
   Future<void> _loadRandomQuestion(
     LoadRandomQuestionEvent event,
-    Emitter<RandomQuestionBlocState> emit,
+    Emitter<RandomQuestionState> emit,
   ) async {
-    state.maybeWhen(
-      loaded: (question) =>
-          emit(RandomQuestionBlocState.loading(question: question)),
-      orElse: () => emit(const RandomQuestionBlocState.loading()),
-    );
+    final currentData = state.asOrNull<RandomQuestionStateData>();
+
+    emit(RandomQuestionStateLoading(question: currentData?.question));
 
     await emit.onEach(
       getRandomQuestionUseCase(),
       onData: (question) {
         question.when(
           value: (value) {
-            emit(RandomQuestionBlocState.loaded(value!));
+            emit(RandomQuestionStateData(question: value!));
           },
           error: (error) {
-            emit(RandomQuestionBlocState.error(error));
+            emit(RandomQuestionStateError(error: error));
           },
         );
       },

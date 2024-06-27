@@ -42,7 +42,8 @@ class AnswerDisplay extends StatelessWidget {
       textColor = Theme.of(context).colorScheme.onSurface;
     }
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
       decoration: boxDecoration,
       padding: const EdgeInsets.symmetric(
         horizontal: 16,

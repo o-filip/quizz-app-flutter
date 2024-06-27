@@ -1,16 +1,17 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/extension/as_ext.dart';
 import '../../../../core/extension/result_ext.dart';
 import '../../../../domain/use_case/get_stored_questions_use_case.dart';
 import 'stored_questions_list_bloc_event.dart';
-import 'stored_questions_list_bloc_state.dart';
+import 'stored_questions_list_state.dart';
 
 class StoredQuestionsListBloc
-    extends Bloc<StoredQuestionsListBlocEvent, StoredQuestionsListBlocState> {
+    extends Bloc<StoredQuestionsListBlocEvent, StoredQuestionsListState> {
   StoredQuestionsListBloc({
     required this.getStoredQuestionsUseCase,
-  }) : super(StoredQuestionsListBlocState.initial()) {
+  }) : super(const StoredQuestionsListStateInitial()) {
     on<LoadStoredQuestionsListEvent>(
       _loadStoredQuestions,
       transformer: restartable(),
@@ -23,17 +24,13 @@ class StoredQuestionsListBloc
 
   Future<void> _loadStoredQuestions(
     LoadStoredQuestionsListEvent event,
-    Emitter<StoredQuestionsListBlocState> emit,
+    Emitter<StoredQuestionsListState> emit,
   ) async {
-    state.maybeWhen(loaded: (questions) {
-      emit(StoredQuestionsListBlocState.loading(
-        questions: questions,
-      ));
-    }, orElse: () {
-      emit(
-        StoredQuestionsListBlocState.loading(),
-      );
-    });
+    final currentData = state.asOrNull<StoredQuestionsListStateData>();
+
+    emit(StoredQuestionsListStateLoading(
+      questions: currentData?.questions,
+    ));
 
     await emit.onEach(
       getStoredQuestionsUseCase(
@@ -42,12 +39,12 @@ class StoredQuestionsListBloc
       onData: (questions) {
         questions.when(
           value: (value) {
-            emit(StoredQuestionsListBlocState.loaded(
+            emit(StoredQuestionsListStateData(
               questions: value,
             ));
           },
           error: (error) {
-            emit(StoredQuestionsListBlocState.error(
+            emit(StoredQuestionsListStateError(
               error: error,
             ));
           },
@@ -58,7 +55,7 @@ class StoredQuestionsListBloc
 
   Future<void> _setFilter(
     SetFilterEvent event,
-    Emitter<StoredQuestionsListBlocState> emit,
+    Emitter<StoredQuestionsListState> emit,
   ) async {
     _likedOnly = event.likedOnly;
     add(const LoadStoredQuestionsListEvent());

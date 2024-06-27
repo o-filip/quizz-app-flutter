@@ -1,22 +1,55 @@
-import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/di/di.dart';
 import '../../../core/enum/category.dart';
 import '../../../core/enum/difficulty.dart';
-import '../../../localization/l10n.dart';
 import '../../bloc/quiz/quiz_bloc.dart';
 import '../../bloc/quiz/quiz_bloc_event.dart';
-import '../../bloc/quiz/quiz_bloc_state.dart';
+import '../../bloc/quiz/quiz_state.dart';
 import '../../error/ui_error_converter.dart';
+import '../../navigation/query_params_ext.dart';
 import '../../utils/dimensions.dart';
+import '../../widget/animated_slide_in_switcher.dart';
 import '../../widget/screen_horizontal_padding.dart';
 import '../../widget/vert_spacer.dart';
 import 'widget/quiz_question_content.dart';
 import 'widget/quiz_review_content.dart';
 
-@RoutePage()
+class QuizRoute {
+  static const path = '/quiz';
+
+  static Uri uri({
+    Difficulty? difficulty,
+    List<Category>? categories,
+    required int numOfQuestions,
+  }) =>
+      Uri(
+        path: path,
+        queryParameters: {
+          if (difficulty != null) 'difficulty': difficulty.index.toString(),
+          if (categories?.isNotEmpty ?? false)
+            'categories': categories!.encodeEnumListToUriQuery(),
+          'numOfQuestions': numOfQuestions.toString(),
+        },
+      );
+
+  static QuizScreen fromUri(Uri uri) {
+    final difficulty = uri.queryParameters['difficulty'] != null
+        ? Difficulty.values[int.parse(uri.queryParameters['difficulty']!)]
+        : null;
+    final categories = uri.decodeEnumList('categories', Category.values) ?? [];
+    final numOfQuestions = int.parse(uri.queryParameters['numOfQuestions']!);
+
+    return QuizScreen(
+      difficulty: difficulty,
+      categories: categories,
+      numOfQuestions: numOfQuestions,
+    );
+  }
+}
+
 class QuizScreen extends StatelessWidget {
   const QuizScreen({
     super.key,
@@ -33,16 +66,18 @@ class QuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<QuizBloc>(
       create: (_) => getIt<QuizBloc>()
-        ..add(
-          GenerateQuizEvent(
-            difficulty: difficulty,
-            categories: categories,
-            numOfQuestions: numOfQuestions,
-          ),
-        ),
+        ..add(GenerateQuizEvent(
+          difficulty: difficulty,
+          categories: categories,
+          numOfQuestions: numOfQuestions,
+        )),
       child: Scaffold(
         appBar: AppBar(
           title: Text(S.of(context).quiz_app_bar_title),
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
         body: SafeArea(
           child: _buildBody(context),
@@ -52,21 +87,32 @@ class QuizScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    return BlocBuilder<QuizBloc, QuizBlocState>(
+    return BlocBuilder<QuizBloc, QuizState>(
       builder: (context, state) {
-        if (state is Initial) {
-          return Container();
-        } else if (state is LoadingQuiz) {
-          return _buildLoading(context);
-        } else if (state is DisplayingQuestion) {
-          return QuizQuestionContent(state: state);
-        } else if (state is QuizError) {
-          return _buildError(context, state);
-        } else if (state is QuizFinished) {
-          return QuizReviewContent(state: state);
-        } else {
-          throw UnimplementedError();
-        }
+        final (widget, index) = switch (state) {
+          QuizStateInitial _ => (Container(), 0),
+          QuizStateLoading _ => (_buildLoading(context), 0),
+          QuizStateDisplayingQuestion _ => (
+              QuizQuestionContent(
+                key: ValueKey(state.currentQuestionIndex),
+                state: state,
+              ),
+              state.currentQuestionIndex
+            ),
+          QuizStateError _ => (_buildError(context, state), 0),
+          QuizStateFinished _ => (
+              QuizReviewContent(
+                key: ValueKey(state.questions.length),
+                state: state,
+              ),
+              state.questions.length
+            ),
+        };
+
+        return AnimatedSlideInSwitcher(
+          pageIndex: index,
+          child: widget,
+        );
       },
     );
   }
@@ -89,7 +135,7 @@ class QuizScreen extends StatelessWidget {
 
   Widget _buildError(
     BuildContext context,
-    QuizError state,
+    QuizStateError state,
   ) {
     return Center(
       child: ScreenHorizontalPadding.symmetricVertical(

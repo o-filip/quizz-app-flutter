@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../core/entity/question.dart';
-import '../../../../localization/l10n.dart';
 import '../../../bloc/random_question/random_question_bloc.dart';
 import '../../../bloc/random_question/random_question_bloc_event.dart';
-import '../../../bloc/random_question/random_question_bloc_state.dart';
+import '../../../bloc/random_question/random_question_state.dart';
 import '../../../error/ui_error_converter.dart';
 import '../../../utils/dimensions.dart';
 import '../../../widget/practice_question_widget.dart';
@@ -17,7 +17,7 @@ class HomeRandomQuestionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: BlocBuilder<RandomQuestionBloc, RandomQuestionBlocState>(
+      child: BlocBuilder<RandomQuestionBloc, RandomQuestionState>(
         builder: (context, state) => Column(
           children: [
             _buildHeader(context),
@@ -29,7 +29,7 @@ class HomeRandomQuestionSection extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return BlocBuilder<RandomQuestionBloc, RandomQuestionBlocState>(
+    return BlocBuilder<RandomQuestionBloc, RandomQuestionState>(
         builder: (context, state) {
       return ScreenHorizontalPadding.symmetricVertical(
         verticalPadding: Dimensions.vertSpacingSmall,
@@ -45,13 +45,14 @@ class HomeRandomQuestionSection extends StatelessWidget {
                     .read<RandomQuestionBloc>()
                     .add(const LoadRandomQuestionEvent());
               },
-              icon: state.maybeMap(
-                loading: (_) => const CircularProgressIndicator(),
-                orElse: () => Icon(
-                  Icons.refresh,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
+              icon: switch (state) {
+                RandomQuestionStateLoading _ =>
+                  const CircularProgressIndicator(),
+                _ => Icon(
+                    Icons.refresh,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+              },
             ),
           ],
         ),
@@ -60,13 +61,36 @@ class HomeRandomQuestionSection extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    return BlocBuilder<RandomQuestionBloc, RandomQuestionBlocState>(
+    return BlocBuilder<RandomQuestionBloc, RandomQuestionState>(
       builder: (context, state) {
-        return state.map(
-          initial: (_) => Container(),
-          loading: (loading) => _buildLoading(context, loading.question),
-          loaded: (loaded) => _buildLoaded(context, loaded.question),
-          error: (error) => _buildError(context, error.error),
+        final widget = switch (state) {
+          final RandomQuestionStateData data => PracticeQuestionWidget(
+              key: ValueKey('question${data.question.id}'),
+              question: data.question,
+            ),
+          final RandomQuestionStateLoading loading => _buildLoading(
+              context,
+              loading.question,
+            ),
+          final RandomQuestionStateError error => _buildError(
+              context,
+              error.error,
+            ),
+          _ => Container(),
+        };
+
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          layoutBuilder: (currentChild, previousChildren) {
+            return Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                ...previousChildren,
+                if (currentChild != null) currentChild,
+              ],
+            );
+          },
+          child: widget,
         );
       },
     );
@@ -79,13 +103,6 @@ class HomeRandomQuestionSection extends StatelessWidget {
     return question != null
         ? PracticeQuestionWidget(question: question)
         : Container();
-  }
-
-  Widget _buildLoaded(
-    BuildContext context,
-    Question question,
-  ) {
-    return PracticeQuestionWidget(question: question);
   }
 
   Widget _buildError(

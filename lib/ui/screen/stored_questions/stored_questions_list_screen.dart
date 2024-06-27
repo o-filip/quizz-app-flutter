@@ -1,19 +1,21 @@
-import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/entity/question.dart';
-import '../../../localization/l10n.dart';
 import '../../bloc/stored_questions/filter/stored_questions_filter_cubit.dart';
-import '../../bloc/stored_questions/filter/stored_questions_filter_cubit_state.dart';
+import '../../bloc/stored_questions/filter/stored_questions_filter_state.dart';
 import '../../bloc/stored_questions/list/stored_questions_list_bloc.dart';
-import '../../bloc/stored_questions/list/stored_questions_list_bloc_state.dart';
+import '../../bloc/stored_questions/list/stored_questions_list_state.dart';
 import '../../error/ui_error_converter.dart';
 import '../../utils/dimensions.dart';
 import '../../widget/screen_horizontal_padding.dart';
 import 'widget/stored_question_list_item.dart';
 
-@RoutePage()
+class StoredQuestionsListRoute {
+  static const path = '/stored-questions';
+}
+
 class StoredQuestionsListScreen extends StatelessWidget {
   const StoredQuestionsListScreen({super.key});
 
@@ -34,8 +36,7 @@ class StoredQuestionsListScreen extends StatelessWidget {
   }
 
   Widget _buildFilter(BuildContext context) {
-    return BlocBuilder<StoredQuestionsFilterCubit,
-        StoredQuestionsFilterCubitState>(
+    return BlocBuilder<StoredQuestionsFilterCubit, StoredQuestionsFilterState>(
       builder: (context, state) {
         return CheckboxListTile(
           value: state.likedOnly,
@@ -55,18 +56,19 @@ class StoredQuestionsListScreen extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
-    return BlocBuilder<StoredQuestionsListBloc, StoredQuestionsListBlocState>(
-      builder: (context, state) => state.map(
-        initial: (_) => Container(),
-        loading: (loading) => loading.questions != null
-            ? _buildQuestionsList(context, loading.questions!)
-            : _buildLoadingIndicator(),
-        loaded: (loaded) => loaded.questions.isEmpty
-            ? _buildEmptyListMessage(context)
-            : _buildQuestionsList(context, loaded.questions),
-        error: (error) => _buildErrorMessage(context, error.error),
-      ),
-    );
+    return BlocBuilder<StoredQuestionsListBloc, StoredQuestionsListState>(
+        builder: (context, state) => switch (state) {
+              StoredQuestionsListStateInitial _ => Container(),
+              final StoredQuestionsListStateLoading loading =>
+                loading.questions != null
+                    ? _buildQuestionsList(context, loading.questions!)
+                    : _buildLoadingIndicator(),
+              final StoredQuestionsListStateData data => data.questions.isEmpty
+                  ? _buildEmptyListMessage(context)
+                  : _buildQuestionsList(context, data.questions),
+              final StoredQuestionsListStateError error =>
+                _buildErrorMessage(context, error.error),
+            });
   }
 
   Widget _buildLoadingIndicator() {

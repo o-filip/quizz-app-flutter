@@ -1,13 +1,13 @@
 import 'package:logging/logging.dart';
 
-import '../../../../core/error/data_exception.dart';
+import '../../../../core/error/exception.dart';
 
 mixin BaseDriftLocalDataStore {
   static const logTag = 'BaseDriftLocalDataStore';
 
   DataException _transformError(dynamic error) {
     Logger(logTag).severe('Handling error: $error');
-    return DataException.unknown(cause: error);
+    return UnknownDataException(cause: error);
   }
 
   Stream<T> driftFetch<T>(

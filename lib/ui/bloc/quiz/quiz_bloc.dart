@@ -7,14 +7,15 @@ import '../../../core/entity/answer.dart';
 import '../../../core/entity/question.dart';
 import '../../../core/enum/category.dart';
 import '../../../core/enum/difficulty.dart';
+import '../../../core/extension/result_ext.dart';
 import '../../../domain/use_case/get_random_quiz_use_case.dart';
 import 'quiz_bloc_event.dart';
-import 'quiz_bloc_state.dart';
+import 'quiz_state.dart';
 
-class QuizBloc extends Bloc<QuizBlocEvent, QuizBlocState> {
+class QuizBloc extends Bloc<QuizBlocEvent, QuizState> {
   QuizBloc({
     required this.getRandomQuizUseCase,
-  }) : super(Initial()) {
+  }) : super(const QuizStateInitial()) {
     on<GenerateQuizEvent>(
       _onGenerateQuizEvent,
       transformer: restartable(),
@@ -29,12 +30,12 @@ class QuizBloc extends Bloc<QuizBlocEvent, QuizBlocState> {
 
   Future<void> _onGenerateQuizEvent(
     GenerateQuizEvent event,
-    Emitter<QuizBlocState> emit,
+    Emitter<QuizState> emit,
   ) async {
     _categories = event.categories;
     _difficulty = event.difficulty;
 
-    emit(LoadingQuiz());
+    emit(const QuizStateLoading());
 
     final stream = getRandomQuizUseCase(
       categories: event.categories,
@@ -42,50 +43,51 @@ class QuizBloc extends Bloc<QuizBlocEvent, QuizBlocState> {
       numOfQuestions: event.numOfQuestions,
     );
 
-    await emit.onEach(stream, onData: (quiz) {
-      if (quiz.isValue) {
-        _updateQuizQuestions(
-          quiz.asValue!.value,
-          emit,
+    await emit.onEach(
+      stream,
+      onData: (quiz) {
+        quiz.when(value: 
+          (value) => _updateQuizQuestions(value, emit),
+          error: (error) => emit(QuizStateError(error: error)),
         );
-      } else {
-        emit(QuizError(quiz.asError!.error));
-      }
-    });
+      },
+    );
   }
 
   void _updateQuizQuestions(
     List<Question> questions,
-    Emitter<QuizBlocState> emit,
+    Emitter<QuizState> emit,
   ) {
     final state = this.state;
 
-    if (state is Initial || state is LoadingQuiz || state is QuizError) {
-      emit(DisplayingQuestion(
+    if (state is QuizStateInitial ||
+        state is QuizStateLoading ||
+        state is QuizStateError) {
+      emit(QuizStateDisplayingQuestion(
         questions: questions,
         currentQuestionIndex: 0,
         selectedAnswers: {},
       ));
-    } else if (state is DisplayingQuestion) {
+    } else if (state is QuizStateDisplayingQuestion) {
       emit(state.copyWith(questions: questions));
-    } else if (state is QuizFinished) {
+    } else if (state is QuizStateFinished) {
       emit(state.copyWith(questions: questions));
     }
   }
 
   FutureOr<void> _onAnswerQuestionEvent(
     AnswerQuestionEvent event,
-    Emitter<QuizBlocState> emit,
+    Emitter<QuizState> emit,
   ) {
     final state = this.state;
-    if (state is DisplayingQuestion) {
+    if (state is QuizStateDisplayingQuestion) {
       // Update selected answers
       final selectedAnswers = Map<String, Answer>.from(state.selectedAnswers);
       selectedAnswers[event.question.id] = event.answer;
 
       if (state.currentQuestionIndex == state.questions.length - 1) {
-        // Quiz finished
-        emit(QuizFinished(
+        // It was the last question -> finish quiz
+        emit(QuizStateFinished(
           questions: state.questions,
           selectedAnswers: selectedAnswers,
           difficulty: _difficulty,

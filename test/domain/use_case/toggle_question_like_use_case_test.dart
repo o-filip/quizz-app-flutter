@@ -2,7 +2,7 @@ import 'package:async/async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:quiz_app/core/error/domain_exception.dart';
+import 'package:quiz_app/core/error/exception.dart';
 import 'package:quiz_app/data/repository/quiz_repository.dart';
 import 'package:quiz_app/domain/use_case/toggle_question_like_use_case.dart';
 

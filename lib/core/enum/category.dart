@@ -3,9 +3,9 @@
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../localization/l10n.dart';
 import '../../ui/theme/app_icons.dart';
 
 enum Category {
@@ -30,55 +30,33 @@ enum Category {
   @JsonValue('Sport & Leisure')
   sportAndLeisure;
 
-  String toUserString(BuildContext context) {
-    switch (this) {
-      case Category.generalKnowledge:
-        return S.of(context).category_general_knowledge;
-      case Category.artsAndLiterature:
-        return S.of(context).category_arts_and_literature;
-      case Category.filmAndTv:
-        return S.of(context).category_film_and_tv;
-      case Category.foodAndDrink:
-        return S.of(context).category_food_and_drink;
-      case Category.geography:
-        return S.of(context).category_geography;
-      case Category.history:
-        return S.of(context).category_history;
-      case Category.music:
-        return S.of(context).category_music;
-      case Category.science:
-        return S.of(context).category_science;
-      case Category.societyAndCulture:
-        return S.of(context).category_society_and_culture;
-      case Category.sportAndLeisure:
-        return S.of(context).category_sport_and_leisure;
-    }
-  }
+  String toUserString(BuildContext context) => switch (this) {
+        Category.generalKnowledge => S.of(context).category_general_knowledge,
+        Category.artsAndLiterature =>
+          S.of(context).category_arts_and_literature,
+        Category.filmAndTv => S.of(context).category_film_and_tv,
+        Category.foodAndDrink => S.of(context).category_food_and_drink,
+        Category.geography => S.of(context).category_geography,
+        Category.history => S.of(context).category_history,
+        Category.music => S.of(context).category_music,
+        Category.science => S.of(context).category_science,
+        Category.societyAndCulture =>
+          S.of(context).category_society_and_culture,
+        Category.sportAndLeisure => S.of(context).category_sport_and_leisure,
+      };
 
-  String getIcon() {
-    switch (this) {
-      case Category.generalKnowledge:
-        return AppIcons.categoryGeneralKnowledge;
-      case Category.artsAndLiterature:
-        return AppIcons.categoryArt;
-      case Category.filmAndTv:
-        return AppIcons.categoryFilm;
-      case Category.foodAndDrink:
-        return AppIcons.categoryFood;
-      case Category.geography:
-        return AppIcons.categoryGeography;
-      case Category.history:
-        return AppIcons.categoryHistory;
-      case Category.music:
-        return AppIcons.categoryMusic;
-      case Category.science:
-        return AppIcons.categoryScience;
-      case Category.societyAndCulture:
-        return AppIcons.categorySociety;
-      case Category.sportAndLeisure:
-        return AppIcons.categorySport;
-    }
-  }
+  String getIcon() => switch (this) {
+        Category.generalKnowledge => AppIcons.categoryGeneralKnowledge,
+        Category.artsAndLiterature => AppIcons.categoryArt,
+        Category.filmAndTv => AppIcons.categoryFilm,
+        Category.foodAndDrink => AppIcons.categoryFood,
+        Category.geography => AppIcons.categoryGeography,
+        Category.history => AppIcons.categoryHistory,
+        Category.music => AppIcons.categoryMusic,
+        Category.science => AppIcons.categoryScience,
+        Category.societyAndCulture => AppIcons.categorySociety,
+        Category.sportAndLeisure => AppIcons.categorySport,
+      };
 }
 
 String encodeCategoriesListToJson(List<Category> categories) =>

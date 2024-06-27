@@ -14,13 +14,9 @@ class UiDiModule {
     _registerBlocs();
   }
 
-  static void _registerNavigation() {
-    getIt.registerFactory(
-      () => AppRouter(),
-    );
-
+  static void _registerNavigation() {    
     getIt.registerFactory<RouterConfig<Object>>(
-      () => getIt<AppRouter>().config(),
+      () => router,
     );
   }
 

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 
-import '../../core/error/data_exception.dart';
-import '../../core/error/domain_exception.dart';
-import '../../localization/l10n.dart';
+import '../../core/error/exception.dart';
 
 class UiErrorConverter {
   static const logTag = 'UiErrorConverter';
@@ -19,39 +18,40 @@ class UiErrorConverter {
       return errorMessage;
     }
 
-    if (error is DataException) {
-      return _convertDataException(context, error);
-    } else if (error is DomainException) {
-      return _convertDomainException(context, error);
-    } else {
-      return S.of(context).error_unknown;
-    }
+    return switch (error) {
+      DataException() => _convertDataException(context, error),
+      DomainException() => _convertDomainException(context, error),
+      _ => S.of(context).error_unknown,
+    };
   }
 
   static String _convertDataException(
     BuildContext context,
     DataException error,
   ) =>
-      error.map(
-        timeout: (_) => S.of(context).error_data_timeout,
-        canceled: (_) => S.of(context).error_data_canceled,
-        connectionError: (_) => S.of(context).error_data_connection,
-        invalidOutputFormat: (_) =>
-            S.of(context).error_data_invalid_output_format,
-        notEnoughEntries: (_) => S.of(context).error_data_not_enough_entries,
-        notFound: (_) => S.of(context).error_data_not_found,
-        unauthorized: (_) => S.of(context).error_data_unauthorized,
-        unknown: (_) => S.of(context).error_data_unknown,
-      );
+      switch (error) {
+        TimeoutDataException() => S.of(context).error_data_timeout,
+        UnauthorizedDataException() => S.of(context).error_data_unauthorized,
+        CanceledDataException() => S.of(context).error_data_canceled,
+        NotFoundDataException() => S.of(context).error_data_not_found,
+        UnknownDataException() => S.of(context).error_data_unknown,
+        ConnectionErrorDataException() => S.of(context).error_data_connection,
+        InvalidOutputFormatDataException() =>
+          S.of(context).error_data_invalid_output_format,
+        NotEnoughEntriesDataException() =>
+          S.of(context).error_data_not_enough_entries
+      };
 
   static String _convertDomainException(
     BuildContext context,
     DomainException error,
   ) =>
-      error.map(
-        questionNotFound: (_) => S.of(context).error_domain_question_not_found,
-        notEnoughStoredQuestions: (_) =>
-            S.of(context).error_domain_not_enough_stored_questions,
-        noStoredQuestion: (_) => S.of(context).error_domain_no_stored_question,
-      );
+      switch (error) {
+        QuestionNotFoundDomainException() =>
+          S.of(context).error_domain_question_not_found,
+        NotEnoughStoredQuestionsDomainException() =>
+          S.of(context).error_domain_not_enough_stored_questions,
+        NoStoredQuestionDomainException() =>
+          S.of(context).error_domain_no_stored_question,
+      };
 }

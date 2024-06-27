@@ -27,13 +27,8 @@ Before running the app, you need to generate the necessary code using the build 
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
-### Step 3: Generate Strings
-This project uses localization to handle strings in different languages. To generate the required localization files, run the following command in the terminal.
-```
-flutter --no-color pub global run intl_utils:generate
-```
 
-### Step 4: Run the App
+### Step 3: Run the App
 After completing the above steps, you can now run the app on an emulator or physical device using the following command.
 ```
 flutter run
@@ -75,7 +70,7 @@ Communication between the layers is structured in a one-way manner, following a 
 
 - [RxDart](https://pub.dev/packages/rxdart): Used for streams manipulation.
 
-- [AutoRoute](https://pub.dev/packages/auto_route): Used for navigation between screens.
+- [GoRouter](https://pub.dev/packages/go_router): Used for navigation between screens.
 
 - [Bloc](https://pub.dev/packages/bloc): Used for UI logic.
 

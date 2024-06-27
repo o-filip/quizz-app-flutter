@@ -28,41 +28,24 @@ class QuizRemoteDataStoreImpl extends QuizRemoteDataStore
             difficulty: _difficultyToQueryParameter(difficulty),
           ));
 
-  String _categoryToQueryParameter(Category category) {
-    switch (category) {
-      case Category.generalKnowledge:
-        return 'general_knowledge';
-      case Category.artsAndLiterature:
-        return 'arts_and_literature';
-      case Category.filmAndTv:
-        return 'film_and_tv';
-      case Category.foodAndDrink:
-        return 'food_and_drink';
-      case Category.geography:
-        return 'geography';
-      case Category.history:
-        return 'history';
-      case Category.music:
-        return 'music';
-      case Category.science:
-        return 'science';
-      case Category.societyAndCulture:
-        return 'society_and_culture';
-      case Category.sportAndLeisure:
-        return 'sport_and_leisure';
-    }
-  }
+  String _categoryToQueryParameter(Category category) => switch (category) {
+        Category.generalKnowledge => 'general_knowledge',
+        Category.artsAndLiterature => 'arts_and_literature',
+        Category.filmAndTv => 'film_and_tv',
+        Category.foodAndDrink => 'food_and_drink',
+        Category.geography => 'geography',
+        Category.history => 'history',
+        Category.music => 'music',
+        Category.science => 'science',
+        Category.societyAndCulture => 'society_and_culture',
+        Category.sportAndLeisure => 'sport_and_leisure',
+      };
 
-  String? _difficultyToQueryParameter(Difficulty? difficulty) {
-    switch (difficulty) {
-      case Difficulty.easy:
-        return 'easy';
-      case Difficulty.medium:
-        return 'medium';
-      case Difficulty.hard:
-        return 'hard';
-      case null:
-        return null;
-    }
-  }
+  String? _difficultyToQueryParameter(Difficulty? difficulty) =>
+      switch (difficulty) {
+        Difficulty.easy => 'easy',
+        Difficulty.medium => 'medium',
+        Difficulty.hard => 'hard',
+        null => null,
+      };
 }

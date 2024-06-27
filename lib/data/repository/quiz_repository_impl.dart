@@ -3,7 +3,7 @@ import 'package:async/async.dart';
 import '../../core/entity/question.dart';
 import '../../core/enum/category.dart';
 import '../../core/enum/difficulty.dart';
-import '../../core/error/data_exception.dart';
+import '../../core/error/exception.dart';
 import '../../core/network/connectivity_info.dart';
 import '../converter/question_model_converter.dart';
 import '../local/data_store/questions_local_data_store.dart';
@@ -84,7 +84,7 @@ class QuizRepositoryImpl extends QuizRepository with BaseRepository {
             .map(
           (questions) {
             if (questions.length < minimalNumOfQuestions) {
-              return Result.error(const DataException.notEnoughEntries());
+              return Result.error(const NotEnoughEntriesDataException());
             } else {
               return Result.value(
                 questionsConverter.localToEntityList(questions),

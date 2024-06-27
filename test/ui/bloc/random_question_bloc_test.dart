@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:quiz_app/domain/use_case/get_random_question_use_case.dart';
 import 'package:quiz_app/ui/bloc/random_question/random_question_bloc.dart';
 import 'package:quiz_app/ui/bloc/random_question/random_question_bloc_event.dart';
-import 'package:quiz_app/ui/bloc/random_question/random_question_bloc_state.dart';
+import 'package:quiz_app/ui/bloc/random_question/random_question_state.dart';
 
 import '../../fixtures/fixtures.dart';
 import 'random_question_bloc_test.mocks.dart';
@@ -32,7 +32,7 @@ void main() {
     });
 
     test('initial state is correct', () {
-      expect(randomQuestionBloc.state, const RandomQuestionBlocState.initial());
+      expect(randomQuestionBloc.state, const RandomQuestionStateInitial());
     });
 
     test(
@@ -45,8 +45,8 @@ void main() {
         const event = LoadRandomQuestionEvent();
 
         final expectedStates = [
-          const RandomQuestionBlocState.loading(),
-          RandomQuestionBlocState.loaded(question),
+          RandomQuestionStateLoading(),
+          RandomQuestionStateData(question: question),
         ];
 
         await testBloc(
@@ -68,8 +68,8 @@ void main() {
 
       const event = LoadRandomQuestionEvent();
       final expectedStates = [
-        const RandomQuestionBlocState.loading(),
-        RandomQuestionBlocState.error(error),
+        RandomQuestionStateLoading(),
+        RandomQuestionStateError(error: error),
       ];
 
       await testBloc(

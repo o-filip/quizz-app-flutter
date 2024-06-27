@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/entity/question.dart';
-import '../../localization/l10n.dart';
 import 'answer_display.dart';
 import 'category_and_difficulty_labels.dart';
 import 'question_like_button.dart';
@@ -23,7 +23,7 @@ class PracticeQuestionWidgetState extends State<PracticeQuestionWidget> {
 
   @override
   void didUpdateWidget(covariant PracticeQuestionWidget oldWidget) {
-    if (oldWidget.question != widget.question) {
+    if (oldWidget.question.id != widget.question.id) {
       setState(() {
         _isCorrectAnswerVisible = false;
       });
