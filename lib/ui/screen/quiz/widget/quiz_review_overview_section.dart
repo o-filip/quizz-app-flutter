@@ -29,7 +29,7 @@ class QuizReviewOverviewSection extends StatelessWidget {
             _buildDifficultyLabel(context),
             _buildCategoriesLabel(context),
             const VerticalSpacerMedium(),
-            _buildProgress(context),
+            AnimatedQuizReviewProgress(state: state)
           ],
         ),
       ),
@@ -57,8 +57,52 @@ class QuizReviewOverviewSection extends StatelessWidget {
       style: Theme.of(context).textTheme.labelLarge,
     );
   }
+}
 
-  Widget _buildProgress(BuildContext context) {
+class AnimatedQuizReviewProgress extends StatefulWidget {
+  const AnimatedQuizReviewProgress({
+    super.key,
+    required this.state,
+  });
+
+  final QuizStateFinished state;
+
+  @override
+  State<AnimatedQuizReviewProgress> createState() =>
+      _AnimatedQuizReviewProgressState();
+}
+
+class _AnimatedQuizReviewProgressState extends State<AnimatedQuizReviewProgress>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    
+    _animation = Tween<double>(
+      begin: 0,
+      end: widget.state.correctAnswersCount / widget.state.questions.length,
+    ).animate(_controller)
+      ..addListener(() {
+        setState(() {});
+      });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -66,14 +110,14 @@ class QuizReviewOverviewSection extends StatelessWidget {
           width: 150,
           height: 150,
           child: CircularProgressIndicator(
-            value: state.correctAnswersCount / state.questions.length,
+            value: _animation.value,
             strokeWidth: 8,
           ),
         ),
         Column(
           children: [
             Text(
-              '${state.correctAnswersCount}/${state.questions.length}',
+              '${widget.state.correctAnswersCount}/${widget.state.questions.length}',
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             Text(

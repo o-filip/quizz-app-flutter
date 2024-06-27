@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../core/enum/category.dart';
 import '../navigation/query_params_ext.dart';
-import '../utils/dimensions.dart';
-import '../widget/screen_horizontal_padding.dart';
+import '../widget/animated_floating_button.dart';
+import '../widget/category_select_card.dart';
 
 class CategoriesSelectionRoute {
   static const path = '/categories-selection';
@@ -45,11 +44,24 @@ class CategoriesSelectionScreen extends StatefulWidget {
 
 class CategoriesSelectionScreenState extends State<CategoriesSelectionScreen> {
   late List<Category> _selectedCategories;
+  bool _didSelectionChange = false;
 
   @override
   void initState() {
     super.initState();
     _selectedCategories = widget.preselectedCategories;
+  }
+
+  void _onSelectionChanged(Category category, bool isSelected) {
+    setState(() {
+      _didSelectionChange = true;
+
+      if (isSelected) {
+        _selectedCategories.add(category);
+      } else {
+        _selectedCategories.remove(category);
+      }
+    });
   }
 
   @override
@@ -65,94 +77,28 @@ class CategoriesSelectionScreenState extends State<CategoriesSelectionScreen> {
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
                 ),
-                itemBuilder: (context, index) => _buildCategoryItem(
-                  context,
-                  Category.values[index],
+                itemBuilder: (context, index) => CategorySelectCard(
+                  category: Category.values[index],
+                  isSelected:
+                      _selectedCategories.contains(Category.values[index]),
+                  onSelectionChanged: (isSelected) => _onSelectionChanged(
+                    Category.values[index],
+                    isSelected,
+                  ),
                 ),
                 itemCount: Category.values.length,
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ScreenHorizontalPadding.symmetricVertical(
-                verticalPadding: Dimensions.vertSpacingSmall,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(_selectedCategories);
-                  },
-                  child:
-                      Text(S.of(context).categories_selection_confirm_button),
-                ),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildCategoryItem(
-    BuildContext context,
-    Category category,
-  ) {
-    final isSelected = _selectedCategories.contains(category);
-
-    return Card(
-      color: _selectedCategories.contains(category)
-          ? Theme.of(context).colorScheme.secondaryContainer
-          : null,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () {
-          setState(() {
-            if (isSelected) {
-              _selectedCategories.remove(category);
-            } else {
-              _selectedCategories.add(category);
-            }
-          });
+      floatingActionButton: AnimatedFloatingButton(
+        onPressed: () {
+          Navigator.of(context).pop(_selectedCategories);
         },
-        child: Stack(
-          children: [
-            if (isSelected)
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    Icons.check_circle,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-              ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    category.getIcon(),
-                    height: 40,
-                    width: 40,
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                    ),
-                    child: Text(
-                      category.toUserString(context),
-                      style: Theme.of(context).textTheme.bodyLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        isHidden: !_didSelectionChange,
+        child: const Icon(Icons.check),
       ),
     );
   }

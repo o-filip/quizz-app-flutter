@@ -46,7 +46,8 @@ class HomeNewQuizSectionState extends State<HomeNewQuizSection> {
             const VerticalSpacerLarge(),
             FilledButton(
               onPressed: _onGenerateTap,
-              child: Text(S.of(context).new_quiz_section_confirm_button),
+              child: Text(
+                  S.of(context).new_quiz_section_confirm_button.toUpperCase()),
             ),
           ],
         ),

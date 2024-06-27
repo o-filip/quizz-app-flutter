@@ -69,7 +69,7 @@ class CategoriesSelectionInput extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Text(_generateInputText(context),
+              child: Text(_getInputText(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.titleMedium),
@@ -87,7 +87,7 @@ class CategoriesSelectionInput extends StatelessWidget {
     );
   }
 
-  String _generateInputText(BuildContext context) {
+  String _getInputText(BuildContext context) {
     if (value == null || value!.isEmpty) {
       return S.of(context).categories_selection_input_all_categories;
     } else if (value!.length == 1) {

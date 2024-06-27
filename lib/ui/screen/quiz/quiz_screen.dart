@@ -11,6 +11,7 @@ import '../../bloc/quiz/quiz_state.dart';
 import '../../error/ui_error_converter.dart';
 import '../../navigation/query_params_ext.dart';
 import '../../utils/dimensions.dart';
+import '../../widget/animated_slide_in_switcher.dart';
 import '../../widget/screen_horizontal_padding.dart';
 import '../../widget/vert_spacer.dart';
 import 'widget/quiz_question_content.dart';
@@ -65,16 +66,18 @@ class QuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<QuizBloc>(
       create: (_) => getIt<QuizBloc>()
-        ..add(
-          GenerateQuizEvent(
-            difficulty: difficulty,
-            categories: categories,
-            numOfQuestions: numOfQuestions,
-          ),
-        ),
+        ..add(GenerateQuizEvent(
+          difficulty: difficulty,
+          categories: categories,
+          numOfQuestions: numOfQuestions,
+        )),
       child: Scaffold(
         appBar: AppBar(
           title: Text(S.of(context).quiz_app_bar_title),
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
         body: SafeArea(
           child: _buildBody(context),
@@ -86,19 +89,30 @@ class QuizScreen extends StatelessWidget {
   Widget _buildBody(BuildContext context) {
     return BlocBuilder<QuizBloc, QuizState>(
       builder: (context, state) {
-        if (state is QuizStateInitial) {
-          return Container();
-        } else if (state is QuizStateLoading) {
-          return _buildLoading(context);
-        } else if (state is QuizStateDisplayingQuestion) {
-          return QuizQuestionContent(state: state);
-        } else if (state is QuizStateError) {
-          return _buildError(context, state);
-        } else if (state is QuizStateFinished) {
-          return QuizReviewContent(state: state);
-        } else {
-          throw UnimplementedError();
-        }
+        final (widget, index) = switch (state) {
+          QuizStateInitial _ => (Container(), 0),
+          QuizStateLoading _ => (_buildLoading(context), 0),
+          QuizStateDisplayingQuestion _ => (
+              QuizQuestionContent(
+                key: ValueKey(state.currentQuestionIndex),
+                state: state,
+              ),
+              state.currentQuestionIndex
+            ),
+          QuizStateError _ => (_buildError(context, state), 0),
+          QuizStateFinished _ => (
+              QuizReviewContent(
+                key: ValueKey(state.questions.length),
+                state: state,
+              ),
+              state.questions.length
+            ),
+        };
+
+        return AnimatedSlideInSwitcher(
+          pageIndex: index,
+          child: widget,
+        );
       },
     );
   }

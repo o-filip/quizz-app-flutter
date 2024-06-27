@@ -31,11 +31,15 @@ class HomeScreen extends StatelessWidget {
         const HomeNewQuizSection(),
         ScreenHorizontalPadding.symmetricVertical(
           verticalPadding: 16,
-          child: ElevatedButton(
-            onPressed: () {
-              context.push(StoredQuestionsListRoute.path);
-            },
-            child: Text(S.of(context).home_all_stored_questions_button),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                context.push(StoredQuestionsListRoute.path);
+              },
+              child: Text(
+                  S.of(context).home_all_stored_questions_button.toUpperCase()),
+            ),
           ),
         ),
         const HomeRandomQuestionSection(),

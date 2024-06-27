@@ -23,11 +23,15 @@ class QuestionLikeButton extends StatelessWidget {
         builder: (context, state) {
           return IconButton(
             onPressed: () => _onPressed(context),
-            icon: Icon(
-              question.isLiked ? Icons.favorite : Icons.favorite_border,
-              color: Theme.of(context)
-                  .extension<ColorsExtensionThemeData>()!
-                  .likeIcon,
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Icon(
+                key: ValueKey(question.isLiked),
+                question.isLiked ? Icons.favorite : Icons.favorite_border,
+                color: Theme.of(context)
+                    .extension<ColorsExtensionThemeData>()!
+                    .likeIcon,
+              ),
             ),
           );
         },

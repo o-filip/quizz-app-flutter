@@ -7,6 +7,7 @@ import '../../../core/entity/answer.dart';
 import '../../../core/entity/question.dart';
 import '../../../core/enum/category.dart';
 import '../../../core/enum/difficulty.dart';
+import '../../../core/extension/result_ext.dart';
 import '../../../domain/use_case/get_random_quiz_use_case.dart';
 import 'quiz_bloc_event.dart';
 import 'quiz_state.dart';
@@ -42,16 +43,15 @@ class QuizBloc extends Bloc<QuizBlocEvent, QuizState> {
       numOfQuestions: event.numOfQuestions,
     );
 
-    await emit.onEach(stream, onData: (quiz) {
-      if (quiz.isValue) {
-        _updateQuizQuestions(
-          quiz.asValue!.value,
-          emit,
+    await emit.onEach(
+      stream,
+      onData: (quiz) {
+        quiz.when(value: 
+          (value) => _updateQuizQuestions(value, emit),
+          error: (error) => emit(QuizStateError(error: error)),
         );
-      } else {
-        emit(QuizStateError(error: quiz.asError!.error));
-      }
-    });
+      },
+    );
   }
 
   void _updateQuizQuestions(

@@ -63,8 +63,9 @@ class HomeRandomQuestionSection extends StatelessWidget {
   Widget _buildBody(BuildContext context) {
     return BlocBuilder<RandomQuestionBloc, RandomQuestionState>(
       builder: (context, state) {
-        return switch (state) {
+        final widget = switch (state) {
           final RandomQuestionStateData data => PracticeQuestionWidget(
+              key: ValueKey('question${data.question.id}'),
               question: data.question,
             ),
           final RandomQuestionStateLoading loading => _buildLoading(
@@ -77,6 +78,20 @@ class HomeRandomQuestionSection extends StatelessWidget {
             ),
           _ => Container(),
         };
+
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          layoutBuilder: (currentChild, previousChildren) {
+            return Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                ...previousChildren,
+                if (currentChild != null) currentChild,
+              ],
+            );
+          },
+          child: widget,
+        );
       },
     );
   }
